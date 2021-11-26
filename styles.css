@@ -8,6 +8,8 @@ body {
     background-color: black;
 }
 
-img {
+.customElement {
     position: fixed;
+    width: 64px;
+    height: 64px;
 }

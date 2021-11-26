@@ -1,34 +1,38 @@
-class Cat extends Image {
+class Cat extends Element {
     constructor(x, y) {
-        let url = "assets/cat/white_cat_sitting.png"
-        let alt = "cat"
-        let zIndex = 1
-        super(url, alt, x, y, zIndex)
+        super("div",{
+            // Attributes for accessibility
+            role: "image",
+            "aria-label": "cat",
+        }, x, y, 1)
         
-        this.sit = "assets/cat/white_cat_sitting.png"
-        this.walk = "assets/cat/white_cat_walking.png"
+        this.direction;  // Direction moving, if any
+        this.sit = "url(\"assets/cat/white_cat_sitting.png\")"
+        this.walk = "url(\"assets/cat/white_cat_walking.png\")"
+        this.element.style.backgroundImage = this.sit  // Start sat
+        this.animationInterval = this.startAnimation();
 
         // Allow movement with arrow keys
         this.directionChanges = {
             "ArrowLeft": {  // West
                 x: -1,
                 y: 0,
-                src: this.walk,  // TODO: Want a different one for each direction
+                backgroundImage: this.walk,  // TODO: Want a different one for each direction
             },
             "ArrowUp": {  // North
                 x: 0,
                 y: 1,
-                src: this.walk,  // TODO: Want a different one for each direction
+                backgroundImage: this.walk,  // TODO: Want a different one for each direction
             },
             "ArrowRight": {  // East
                 x: 1,
                 y: 0,
-                src: this.walk,  // TODO: Want a different one for each direction
+                backgroundImage: this.walk,  // TODO: Want a different one for each direction
             },
             "ArrowDown": {  // South
                 x: 0,
                 y: -1,
-                src: this.walk,  // TODO: Want a different one for each direction
+                backgroundImage: this.walk,  // TODO: Want a different one for each direction
             },
             // TODO: Allow WASD movement, too?
         }
@@ -40,21 +44,56 @@ class Cat extends Image {
     // Change coordinates and gif based on if moving
     moveInDirection(direction) {
         // start / stop movement with space
-        if (direction === " ") {
-            this.image.src = this.sit;
+        if (direction === " " && this.direction !== direction) {
+            this.element.style.backgroundImage = this.sit;
+            this.animationInterval = this.startAnimation();
         }
 
-        // If the image is meant to be moving
+        // If the element is meant to be moving
         let directionChange = this.directionChanges[direction]
         if (directionChange !== undefined) {
             this.x += directionChange.x;
             this.y += directionChange.y;
-            this.image.src = directionChange.src;
+            this.element.style.backgroundImage = directionChange.backgroundImage;
+            super.move();
+
+            // If no change don't interrupt animation
+            if (this.direction !== direction) {
+                this.animationInterval = this.startAnimation();
+            }
         }
-        super.move();
+
+        // Save direction so can tell if need to start animation over
+        // which happens when changing direction or to/from sit/stand
+        this.direction = direction;
     }
 
-    // Allow the user to move this image
+    startAnimation() {
+        this.stopAnimation();  // Make sure it's stopped first
+        let widthOfSpriteSheet = 64 * 3; 
+        let xPosition = 0;  // Start x position for the element
+
+        return setInterval(() => {
+            this.element.style.backgroundPosition = `-${xPosition}px 0px`;
+      
+            if (xPosition < widthOfSpriteSheet) {
+                // Increment the position by the width of each sprite each time
+                xPosition += 64;  // Size of each sprite
+            } else {
+                // Reset the position to show first sprite after the last one
+                xPosition = 0;
+            }
+        }, 300);
+    }
+
+    // Stop Animation
+    stopAnimation() {
+        if (this.animationInterval) {
+            clearInterval(this.animationInterval);
+        }
+    }
+
+    // Allow the user to move this element
     allowUserMovement() {
         let direction;  // Make available otuside of event listener
 
@@ -68,6 +107,6 @@ class Cat extends Image {
         // Update location once per 1 ms
         setInterval(() => {
             this.moveInDirection(direction)
-        }, 1)
+        }, 1);
     }
 }
