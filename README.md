@@ -1,8 +1,8 @@
 # Snok
 
-Which is just "snake" remade using only vanillia JavaScript, HTML, and CSS.
+Which is just "snake" remade using only vanillia JavaScript, HTML, and CSS. And this time you're a cat, collecting glitter to leave everywhere.
 
-Goal: How many {thing}s can you collect?! Can you beat the high score?
+Goal: How much glitter can you collect?! Can you beat the high score?
 
 # Prerequisites for running it
 

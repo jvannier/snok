@@ -8,32 +8,50 @@ class Cat extends Image {
         this.sit = "assets/cat/white_cat_sitting.png"
         this.walk = "assets/cat/white_cat_walking.png"
 
+        // Allow movement with arrow keys
+        this.directionChanges = {
+            "ArrowLeft": {  // West
+                x: -1,
+                y: 0,
+                src: this.walk,  // TODO: Want a different one for each direction
+            },
+            "ArrowUp": {  // North
+                x: 0,
+                y: 1,
+                src: this.walk,  // TODO: Want a different one for each direction
+            },
+            "ArrowRight": {  // East
+                x: 1,
+                y: 0,
+                src: this.walk,  // TODO: Want a different one for each direction
+            },
+            "ArrowDown": {  // South
+                x: 0,
+                y: -1,
+                src: this.walk,  // TODO: Want a different one for each direction
+            },
+            // TODO: Allow WASD movement, too?
+        }
+
         // Update coordinates once per 1 ms
         this.allowUserMovement()
     }
 
     // Change coordinates and gif based on if moving
     moveInDirection(direction) {
-        // If the image is meant to be moving
-        if (direction !== null) {
-            if(direction === 'west'){
-                this.x-=1
-            }
-            if(direction === 'north'){
-                this.y+=1
-            }
-            if(direction === 'east'){
-                this.x+=1
-            }
-            if(direction === 'south'){
-                this.y-=1
-            }
-
-            super.move()
-            this.image.src = this.walk  // TODO: Want a different one per direction
-        } else {
-            this.image.src = this.sit
+        // start / stop movement with space
+        if (direction === " ") {
+            this.image.src = this.sit;
         }
+
+        // If the image is meant to be moving
+        let directionChange = this.directionChanges[direction]
+        if (directionChange !== undefined) {
+            this.x += directionChange.x;
+            this.y += directionChange.y;
+            this.image.src = directionChange.src;
+        }
+        super.move();
     }
 
     // Allow the user to move this image
@@ -44,20 +62,7 @@ class Cat extends Image {
         document.addEventListener('keydown', function(e){
             // Ignore repeated keypresses (no change)
             if(e.repeat) return;
-        
-            // Move with arrow keys
-            if(e.key === "ArrowLeft"){
-                direction = "west"
-            } else if(e.key === "ArrowUp"){
-                direction = "north"
-            } else if(e.key === "ArrowRight"){
-                direction = "east"
-            } else if(e.key === "ArrowDown"){
-                direction = "south"
-            // start / stop movement with space
-            } else if(e.key === " ") {
-                direction = null
-            }
+            direction = e.key;
         })
 
         // Update location once per 1 ms
