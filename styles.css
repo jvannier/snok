@@ -1,15 +1,26 @@
-main {
+#gameBoard {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
+}
+
+#scoreContainer {
+    color: white;
+}
+
+.customElement {
+    position: absolute;
+    width: 64px;
+    height: 64px;
 }
 
 body {
     background-color: black;
 }
 
-.customElement {
-    position: fixed;
-    width: 64px;
-    height: 64px;
+main {
+    border: 1px solid red;  /* TODO: prob don't want this red */
+    position: absolute;
 }
+
+/* TODO: Make it responsive */

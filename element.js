@@ -1,8 +1,9 @@
 class Element {
     constructor(type="", extraAttributes={}, x = 0, y = 0, z = 0) {
         this.element = document.createElement(type);
-        this.element.classList.add("customElement")
-        document.body.append(this.element);
+        this.element.classList.add("customElement");
+        this.element.setAttribute("id", `coord_${x}_${y}`);
+        document.querySelector("#gameBoard").append(this.element);
 
         // Set any extra attributes
         for (const [key, value] of Object.entries(extraAttributes)) {

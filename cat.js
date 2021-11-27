@@ -1,38 +1,45 @@
 class Cat extends Element {
-    constructor(x, y) {
+    constructor() {
         super("div",{
             // Attributes for accessibility
             role: "image",
             "aria-label": "cat",
-        }, x, y, 1)
+        }, ...gameBoard.spawnPointCoordinates, 1)
+
+        // Number of glitters found
+        this.glitterFound = 0;
         
+        // Movements
         this.direction;  // Direction moving, if any
-        this.sit = "url(\"assets/cat/white_cat_sitting.png\")"
-        this.walk = "url(\"assets/cat/white_cat_walking.png\")"
-        this.element.style.backgroundImage = this.sit  // Start sat
+        let sit = "url(\"assets/cat/white_cat_sitting.png\")";
+        let walk = "url(\"assets/cat/white_cat_walking.png\")";
+        this.element.style.backgroundImage = sit;  // Start sat
         this.animationInterval = this.startAnimation();
 
-        // Allow movement with arrow keys
+        // All possible movements from user input
         this.directionChanges = {
+            // Move with arrow keys
             "ArrowLeft": {  // West
-                x: -1,
-                y: 0,
-                backgroundImage: this.walk,  // TODO: Want a different one for each direction
+                x: -1, y: 0,
+                backgroundImage: walk,  // TODO: Want a different one for each direction
             },
             "ArrowUp": {  // North
-                x: 0,
-                y: 1,
-                backgroundImage: this.walk,  // TODO: Want a different one for each direction
+                x: 0, y: 1,
+                backgroundImage: walk,  // TODO: Want a different one for each direction
             },
             "ArrowRight": {  // East
-                x: 1,
-                y: 0,
-                backgroundImage: this.walk,  // TODO: Want a different one for each direction
+                x: 1, y: 0,
+                backgroundImage: walk,  // TODO: Want a different one for each direction
             },
             "ArrowDown": {  // South
-                x: 0,
-                y: -1,
-                backgroundImage: this.walk,  // TODO: Want a different one for each direction
+                x: 0, y: -1,
+                backgroundImage: walk,  // TODO: Want a different one for each direction
+            },
+            // start / stop movement with space
+            " ": {
+                x: 0, y: 0,
+                backgroundImage: sit,
+                notMoving: true,
             },
             // TODO: Allow WASD movement, too?
         }
@@ -43,19 +50,27 @@ class Cat extends Element {
 
     // Change coordinates and gif based on if moving
     moveInDirection(direction) {
-        // start / stop movement with space
-        if (direction === " " && this.direction !== direction) {
-            this.element.style.backgroundImage = this.sit;
-            this.animationInterval = this.startAnimation();
-        }
-
-        // If the element is meant to be moving
+        // If the element is meant to be moving/stopping
         let directionChange = this.directionChanges[direction]
         if (directionChange !== undefined) {
             this.x += directionChange.x;
             this.y += directionChange.y;
             this.element.style.backgroundImage = directionChange.backgroundImage;
-            super.move();
+
+            // Check if found a glitter element
+            let hasGlitter = gameBoard.isCollisionWithGlitter(this.x, this.y);
+            if (hasGlitter === true) {
+                this.glitterFound++;
+                gameBoard.removeFromBoard(this.x, this.y);
+                document.querySelector("#score").innerText = this.glitterFound;
+                // TODO: Add more glitter to the board
+            }
+            // TODO: Check for collision with tail
+
+            // If a coordinate change happened, move the element
+            if (directionChange.notMoving !== true) {
+                super.move();
+            }
 
             // If no change don't interrupt animation
             if (this.direction !== direction) {
