@@ -14,31 +14,66 @@ let gameBoard = {
         return this.spawnPoint.map(element => element * this.spriteSize);
     },
 
-    // Return if the given coordinates already have glitter in the gameBoard
-    isCollisionWithGlitter(x, y) {
-        if (x < 0 || y < 0) {
-            return;  // Not a valid coordinate
+    // Check if there is a collision and if there is remove (or not) it from the board
+    isCollision(x, y, remove = true) {
+        let collision = this.board[x][y] ? 1 : 0
+        if (collision === 1 && remove === true) {
+            this.removeFromBoard(x, y);
         }
+        return collision;
+    },
 
-        // TODO: This doesn't match the boxes properly
-        let xCoord = Math.floor(x / this.spriteSize);
-        let yCoord = Math.floor(y / this.spriteSize);
+    // Return number of times given coordinates collide with glitter in the gameBoard
+    areCollisionsWithGlitter(x, y) {
+        // Note: glitter is shown in the gameBoard by an element that is "true"
+        if (x < 0 || y < 0) {
+            return 0;  // Not a valid coordinate
+        }
+        let collisions = 0;
+        let xCoord = x / this.spriteSize;
+        let yCoord = y / this.spriteSize;
+        if (x % this.spriteSize === 0 && y % this.spriteSize === 0) {
+            // On exactly one square (so only need to check 1 tile)
+            collisions += this.isCollision(xCoord, yCoord);
+        } else if (x % this.spriteSize === 0) {
+            // Is in the same row (so only need to check 2 tiles)
+            yCoord = Math.floor(yCoord);
 
-        return (this.board[xCoord][yCoord] ? true : false);
+            // Check top-most tile could be colliding with
+            collisions += this.isCollision(xCoord, yCoord);
+
+            // Check the tile one down
+            collisions += this.isCollision(xCoord, yCoord + 1);
+        } else if (y % this.spriteSize === 0) {
+            // Is in the same column (so only need to check 2 tiles)
+            xCoord = Math.floor(xCoord);
+
+            // Check the left-most tile could be colliding with
+            collisions += this.isCollision(xCoord, yCoord);
+
+            // Check the tile one down
+            collisions += this.isCollision(xCoord + 1, yCoord);
+        } else {
+            // Is not in the same row or column (so need to check 4 tiles)
+            xCoord = Math.floor(xCoord);
+            yCoord = Math.floor(yCoord);
+            collisions += this.isCollision(xCoord, yCoord);
+            collisions += this.isCollision(xCoord + 1, yCoord);
+            collisions += this.isCollision(xCoord, yCoord + 1);
+            collisions += this.isCollision(xCoord + 1, yCoord + 1);
+        }
+        return collisions;
     },
     
-    // Remove the element at the coordinate x, y from the board
+    // Remove the element at the x, y indices on the board
     removeFromBoard(x, y) {
-        let xBoardCoord = Math.floor(x / this.spriteSize);
-        let yBoardCoord = Math.floor(y / this.spriteSize);
-
         // Remove from DOM
-        let xCoord = xBoardCoord * gameBoard.spriteSize;
-        let yCoord = yBoardCoord * gameBoard.spriteSize;
+        let xCoord = x * gameBoard.spriteSize;
+        let yCoord = y * gameBoard.spriteSize;
         document.querySelector(`#coord_${xCoord}_${yCoord}`).remove();
 
         // Remove from board
-        this.board[xBoardCoord][yBoardCoord] = null;
+        this.board[x][y] = null;
     },
 
     makeBoard() {

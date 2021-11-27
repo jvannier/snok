@@ -57,19 +57,18 @@ class Cat extends Element {
             this.y += directionChange.y;
             this.element.style.backgroundImage = directionChange.backgroundImage;
 
-            // Check if found a glitter element
-            let hasGlitter = gameBoard.isCollisionWithGlitter(this.x, this.y);
-            if (hasGlitter === true) {
-                this.glitterFound++;
-                gameBoard.removeFromBoard(this.x, this.y);
-                document.querySelector("#score").innerText = this.glitterFound;
-                // TODO: Add more glitter to the board
-            }
-            // TODO: Check for collision with tail
-
-            // If a coordinate change happened, move the element
             if (directionChange.notMoving !== true) {
+                // If a coordinate change happened, move the element
                 super.move();
+
+                // Check if found a glitter element
+                let hasGlitter = gameBoard.areCollisionsWithGlitter(this.x, this.y);
+                if (hasGlitter > 0) {
+                    this.glitterFound += hasGlitter;
+                    document.querySelector("#score").innerText = this.glitterFound;
+                    // TODO: Add more glitter to the board
+                }
+                // TODO: Check for collision with tail
             }
 
             // If no change don't interrupt animation
