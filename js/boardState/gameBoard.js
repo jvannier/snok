@@ -14,11 +14,32 @@ let gameBoard = {
         return this.spawnPoint.map(element => element * this.spriteSize);
     },
 
+    // If there is a collision with a wall stop taking user input and animation and show death
+    collisionWithWall(x, y, sprite) {
+        let max = (gameBoard.size - 1) * gameBoard.spriteSize;
+        if (x < 0 || y < 0 || x > max || y > max) {
+            death.youDied();
+            sprite.stopAnimation();
+            return true;
+        }
+        return false;
+    },
+
+    // Remove the gameboard from the screen
+    removeBoard() {
+        let board = document.querySelector("#gameBoard")
+        if (board) {
+            board.remove();
+        }
+    },
+
     // Check if there is a collision and if there is remove (or not) it from the board
     isCollision(x, y, remove = true) {
         let collision = this.board[x][y] ? 1 : 0
         if (collision === 1 && remove === true) {
             this.removeFromBoard(x, y);
+
+            // tail.addToTail(x, y) // TODO?
         }
         return collision;
     },
@@ -65,12 +86,12 @@ let gameBoard = {
         return collisions;
     },
     
-    // Remove the element at the x, y indices on the board
+    // Remove the glitter element at the x, y indices on the board
     removeFromBoard(x, y) {
         // Remove from DOM
         let xCoord = x * gameBoard.spriteSize;
         let yCoord = y * gameBoard.spriteSize;
-        document.querySelector(`#coord_${xCoord}_${yCoord}`).remove();
+        glitter.removeGlitter(xCoord, yCoord);
 
         // Remove from board
         this.board[x][y] = null;

@@ -19,3 +19,4 @@ Then you can start or pause the game with the spacebar and change the direction 
 
 # Assets from
 Cats: https://pop-shop-packs.itch.io/cats-pixel-asset-pack
+Glitter: https://www.gamedeveloperstudio.com/graphics/viewgraphic.php?page-name=sparkle-effect&item=1c4c78258c388k4y84

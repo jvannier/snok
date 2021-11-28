@@ -1,13 +1,13 @@
 class Element {
     constructor(type="", extraAttributes={}, x = 0, y = 0, z = 0) {
-        this.element = document.createElement(type);
-        this.element.classList.add("customElement");
-        this.element.setAttribute("id", `coord_${x}_${y}`);
-        document.querySelector("#gameBoard").append(this.element);
+        this.htmlElement = document.createElement(type);
+        this.htmlElement.classList.add("customElement");
+        this.htmlElement.setAttribute("id", `coord_${x}_${y}`);
+        document.querySelector("#gameBoard").append(this.htmlElement);
 
         // Set any extra attributes
         for (const [key, value] of Object.entries(extraAttributes)) {
-            this.element.setAttribute(key, value);
+            this.htmlElement.setAttribute(key, value);
         }
 
         this.x = x; // X coordinate of element
@@ -27,12 +27,12 @@ class Element {
         if (z === null) {
             z = this.z
         }
-        this.element.style.left = x + "px";
-        this.element.style.bottom = y + "px"
-        this.element.style.zIndex = z;
+        this.htmlElement.style.left = x + "px";
+        this.htmlElement.style.bottom = y + "px"
+        this.htmlElement.style.zIndex = z;
     }
 
     set backgroundImage(newBackgroundImage) {
-        this.element.style.backgroundImage = `url("${newBackgroundImage}")`;
+        this.htmlElement.style.backgroundImage = `url("${newBackgroundImage}")`;
     }
 }

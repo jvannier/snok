@@ -1,3 +1,10 @@
+#death {
+    position: inherit;
+    color: red;
+    z-index: 2;
+    /* TODO: More styling than this */
+}
+
 #gameBoard {
     display: flex;
     flex-direction: row;

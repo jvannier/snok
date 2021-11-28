@@ -6,18 +6,16 @@ class Cat extends Element {
             "aria-label": "cat",
         }, ...gameBoard.spawnPointCoordinates, 1);
 
-        // Number of glitters found
-        this.glitterFound = 0;
-        
-        this.sprite = new Sprite(this.element);  // Sprite to be animated
+        this.glitterFound = 0;  // Number of glitters found
+        this.sprite = new AnimatedSprite(this.htmlElement);  // Cat sprite to be animated
         this.direction;  // Direction moving, if any
-        this.sitSprites = 3;  // Number of sprites in the sitting sprite sheets
-        this.walkSprites = 4;  // Number of sprites in the walking sprite sheets
-        this.backgroundImage = moves.sitLeft;  // Start sat left
-        this.sprite.startAnimation(this.sitSprites);
+
+        // Start sat left
+        this.backgroundImage = moves.sitLeft;
+        this.sprite.startAnimation(this.sprite.sitSprites);
         
         // Update coordinates once per 1 ms
-        this.allowUserMovement();
+        this.eventInterval = this.listenForUserInput();
     }
 
     // Check if found a glitter element
@@ -26,21 +24,42 @@ class Cat extends Element {
         if (hasGlitter > 0) {
             this.glitterFound += hasGlitter;
             document.querySelector("#score").innerText = this.glitterFound;
-            glitter.newGlitter();
+            glitter.newGlitter();  // Also adds to the tail path
+            // tail.addToTail(this.x, this.y)
+            // console.log(tail.path)
         }
     }
     
-    // Change coordinates and gif based on if moving
-    moveInDirection(direction) {
+    checkCollisions() {
+        // Check for collisions with wall
+        let lethalCollision = gameBoard.collisionWithWall(this.x, this.y, this.sprite);
+        // TODO: if there is a collision show the cat falling over?
+
+        // TODO: Check for collision with tail
+
+        // Stop moving if found lethal collision
+        if (lethalCollision === true && this.eventInterval) {
+            clearInterval(this.eventInterval);
+        }
+
+        // Check for glitter element collisions
+        this.glitterCollisions();
+
+    }
+
+    // If the cat is paused sit it down
+    catPause(direction) {
         // Stop movement with pause key
-        if (direction === moves.pause && this.direction !== direction) {
+        if (this.direction !== direction) {
             // Pick which direction to sit based on previous direction
             let oldDirectionChange = moves.directionChanges[this.direction];
             this.backgroundImage = oldDirectionChange.sitBackgroundImage;
-            this.sprite.startAnimation(this.walkSprites);
+            this.sprite.startAnimation(this.sitSprites);
         }
+    }
 
-        // If the element is meant to be moving
+    // Moves the cat in the given direction
+    catMove(direction) {
         let directionChange = moves.directionChanges[direction]
         if (directionChange !== undefined) {
             this.x += directionChange.x;
@@ -48,15 +67,21 @@ class Cat extends Element {
             this.backgroundImage = directionChange.backgroundImage;
             super.move();
 
-            // Check for glitter element collisions
-            this.glitterCollisions();
-
-            // TODO: Check for collision with tail
-
-            // If no change don't interrupt animation
+            // Restart animation if a change occurred
             if (this.direction !== direction) {
-                this.sprite.startAnimation(this.walkSprites);
+                this.sprite.startAnimation(this.sprite.walkSprites);
             }
+            return true;  // A move happened
+        }
+        return false;  //  No move happened
+    }
+    
+    // Change coordinates and animation based on if moving
+    moveInDirection(direction) {
+        if (direction === moves.pause) {
+            this.catPause(direction);
+        } else if (this.catMove(direction)) {
+            this.checkCollisions();
         }
         
         // Save direction so can tell if need to start animation over
@@ -64,12 +89,12 @@ class Cat extends Element {
         this.direction = direction;
     }
 
-    // Allow the user to move this element
-    allowUserMovement() {
+    // Listen for user input to move/stop this element
+    listenForUserInput() {
         let direction;  // Make available otuside of event listener
 
         // Move using arrow keys
-        document.addEventListener('keydown', function(e){
+        document.addEventListener('keydown', function(e) {
             // Ignore repeated keypresses (no change)
             if(e.repeat) return;
 
@@ -80,7 +105,7 @@ class Cat extends Element {
         })
 
         // Update location once per 1 ms
-        setInterval(() => {
+        return setInterval(() => {
             this.moveInDirection(direction);
         }, 1);
     }

@@ -10,12 +10,20 @@
         <p>// TODO: Instructions?</p>
         <p id="scoreContainer">Score: <span id="score">0</span></p>
 
-        <script src="./js/moves.js"></script>
-        <script src="./js/sprite.js"></script>
-        <script src="./js/element.js"></script>
-        <script src="./js/gameBoard.js"></script>
-        <script src="./js/glitter.js"></script>
-        <script src="./js/cat.js"></script>
+        <!-- Import JS base class files -->
+        <script src="./js/baseClasses/animatedSprite.js"></script>
+        <script src="./js/baseClasses/element.js"></script>
+
+        <!-- Import JS files for cat and cat movement -->
+        <script src="./js/cat/moves.js"></script>
+        <script src="./js/cat/tail.js"></script>
+        <script src="./js/cat/cat.js"></script>
+
+        <!-- Import JS files for board state -->
+        <script src="./js/boardState/gameBoard.js"></script>
+        <script src="./js/boardState/death.js"></script>
+        <script src="./js/boardState/glitter.js"></script>
+
         <script src="./js/index.js"></script>
     </body>
 </html>

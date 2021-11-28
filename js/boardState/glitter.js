@@ -1,4 +1,7 @@
 let glitter = {
+    sprite: null,  // Sprite of actual glitter
+    animationInterval: null,  // Interval to update animation
+
     newXY() {
         // Generate new random x, y place in gameBoard for glitter
         let xRand = Math.floor(Math.random() * gameBoard.size);
@@ -17,9 +20,10 @@ let glitter = {
         } while(
             // Don't spawn on at the spawn point
             (xRand === spawnX && yRand === spawnY)
-            // Don't spawn on a spot that already has glitter on it
-            || gameBoard.board[xRand][yRand] === true);
+            // Don't spawn on a spot that already has glitter or a tail element on it
+            || gameBoard.board[xRand][yRand] !== null);
 
+        // console.log(gameBoard.board[xRand][yRand])
         // TODO: Also make sure it isn't where the cat is
         // Note: Score is also how long the tail is
 
@@ -29,9 +33,20 @@ let glitter = {
         // Make coordinates and glitter element
         let x = gameBoard.spriteSize * xRand;
         let y = gameBoard.spriteSize * yRand;
-        return new Element("img", {
-            src: "assets/glitter/glitter.png",
-            alt: "glitter",
-        }, x, y)
+        let element = new Element("div", {
+            // Attributes for accessibility
+            role: "image",
+            "aria-label": "glitter",
+        }, x, y);
+        element.backgroundImage = "assets/glitter/glitter.png";
+
+        this.sprite = new AnimatedSprite(element.htmlElement);
+        this.sprite.startAnimation(this.sprite.glitterSprites, 200);
+    },
+
+    // When removing glitter element also stop the animation interval
+    removeGlitter(x, y) {
+        document.querySelector(`#coord_${x}_${y}`).remove();
+        this.sprite.stopAnimation();
     },
 }
