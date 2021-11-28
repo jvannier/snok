@@ -31,4 +31,8 @@ class Element {
         this.element.style.bottom = y + "px"
         this.element.style.zIndex = z;
     }
+
+    set backgroundImage(newBackgroundImage) {
+        this.element.style.backgroundImage = `url("${newBackgroundImage}")`;
+    }
 }

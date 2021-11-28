@@ -21,6 +21,7 @@ let glitter = {
             || gameBoard.board[xRand][yRand] === true);
 
         // TODO: Also make sure it isn't where the cat is
+        // Note: Score is also how long the tail is
 
         // Add to gameBoard
         gameBoard.board[xRand][yRand] = true;
