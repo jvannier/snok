@@ -22,13 +22,15 @@ class Cat extends Element {
 
     // Check if found a sparkle element
     sparkleCollisions() {
-        let hasSparkle = gameBoard.areCollisionsWithSparkle(this.x, this.y);
-        if (hasSparkle > 0) {
-            this.sparklesFound += hasSparkle;
+        let hasSparkles = gameBoard.areCollisionsWithSparkle(this.x, this.y);
+        if (hasSparkles > 0) {
+            this.sparklesFound += hasSparkles;
             document.querySelector("#score").innerText = this.sparklesFound;
-            sparkle.newSparkle();  // Also adds to the tail path
-            // tail.addToTail(this.x, this.y)
-            // console.log(tail.path)
+            for (let i = 0; i < hasSparkles; i++) {
+                sparkle.newSparkle();  // Also adds to the tail path
+                // tail.addToTail(this.x, this.y)
+                // console.log(tail.path)
+            }
         }
     }
     
