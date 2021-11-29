@@ -1,7 +1,7 @@
 class AnimatedSprite {
     sitSprites = 3;  // Number of sprites in the sitting sprite sheets
     walkSprites = 4;  // Number of sprites in the walking sprite sheets
-    glitterSprites = 9;  // Number of sprites in the glitter sprite sheet
+    sparkleSprites = 9;  // Number of sprites in the sparkle sprite sheet
 
     constructor(htmlElement) {
         this.htmlElement = htmlElement;
@@ -16,8 +16,8 @@ class AnimatedSprite {
         this.startAnimation(this.walkSprites, 300);
     }
 
-    glitter() {
-        this.startAnimation(this.glitterSprites, 200);
+    sparkle() {
+        this.startAnimation(this.sparkleSprites, 200);
     }
 
     startAnimation(sprites, time) {

@@ -5,10 +5,10 @@ class Cat extends Element {
             role: "image",
             "aria-label": "cat",
         }, ...gameBoard.spawnPointCoordinates, 1);
-        // Override coordinate based ID so can put glitter on spawn point in the future
+        // Override coordinate based ID so can put sparkles on spawn point in the future
         this.htmlElement.setAttribute("id", "cat");
 
-        this.glitterFound = 0;  // Number of glitters found
+        this.sparklesFound = 0;  // Number of sparkles found
         this.sprite = new AnimatedSprite(this.htmlElement);  // Cat sprite to be animated
         this.direction;  // Direction moving, if any
 
@@ -20,13 +20,13 @@ class Cat extends Element {
         this.eventInterval = this.listenForUserInput();
     }
 
-    // Check if found a glitter element
-    glitterCollisions() {
-        let hasGlitter = gameBoard.areCollisionsWithGlitter(this.x, this.y);
-        if (hasGlitter > 0) {
-            this.glitterFound += hasGlitter;
-            document.querySelector("#score").innerText = this.glitterFound;
-            glitter.newGlitter();  // Also adds to the tail path
+    // Check if found a sparkle element
+    sparkleCollisions() {
+        let hasSparkle = gameBoard.areCollisionsWithSparkle(this.x, this.y);
+        if (hasSparkle > 0) {
+            this.sparklesFound += hasSparkle;
+            document.querySelector("#score").innerText = this.sparklesFound;
+            sparkle.newSparkle();  // Also adds to the tail path
             // tail.addToTail(this.x, this.y)
             // console.log(tail.path)
         }
@@ -49,8 +49,8 @@ class Cat extends Element {
             this.sprite.stopAnimation();  // Stop cat from moving
         }
 
-        // Check for glitter element collisions
-        this.glitterCollisions();
+        // Check for sparkles element collisions
+        this.sparkleCollisions();
 
     }
 

@@ -1,8 +1,8 @@
 /*
  * Game Board containing a baord that is a list of lists (a 2D array)
- * containing the positions of glittler and tail elements.
+ * containing the positions of sparkle and tail elements.
  *
- * - "true" on the board represents a glitter element
+ * - "true" on the board represents a sparkle element
  * - "false" represents a tail element
  * - "null" represents that no element is there
  */
@@ -36,8 +36,8 @@ let gameBoard = {
         let xCoord = x * gameBoard.spriteSize;
         let yCoord = y * gameBoard.spriteSize;
 
-        // Remove glitter from DOM if it's glitter
-        glitter.removeGlitter(xCoord, yCoord);
+        // Remove sparkle from DOM if it's sparkle
+        sparkle.removeSparkle(xCoord, yCoord);
 
         // Remove from board
         this.board[x][y] = null;
@@ -63,9 +63,9 @@ let gameBoard = {
         return collision;
     },
 
-    // Return number of times given coordinates collide with glitter in the gameBoard
-    areCollisionsWithGlitter(x, y) {
-        // Note: glitter is shown in the gameBoard by an element that is "true"
+    // Return number of times given coordinates collide with a sparkle in the gameBoard
+    areCollisionsWithSparkle(x, y) {
+        // Note: sparkle is shown in the gameBoard by an element that is "true"
         if (x < 0 || y < 0) {
             return 0;  // Not a valid coordinate
         }

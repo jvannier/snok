@@ -1,8 +1,8 @@
 # Snok
 
-Which is just "snake" remade using only vanillia JavaScript, HTML, and CSS. And this time you're a cat, collecting glitter to leave everywhere.
+Which is just "snake" remade using only vanillia JavaScript, HTML, and CSS. And this time you're a cat, collecting sparkles to leave everywhere.
 
-Goal: How much glitter can you collect?! Can you beat the high score?
+Goal: How many sparkles can you collect?! Can you beat the high score?
 
 # Prerequisites for running it
 
@@ -19,4 +19,4 @@ Then you can start or pause the game with the spacebar and change the direction 
 
 # Assets from
 Cats: https://pop-shop-packs.itch.io/cats-pixel-asset-pack
-Glitter: https://www.gamedeveloperstudio.com/graphics/viewgraphic.php?page-name=sparkle-effect&item=1c4c78258c388k4y84
+Sparkle: https://www.gamedeveloperstudio.com/graphics/viewgraphic.php?page-name=sparkle-effect&item=1c4c78258c388k4y84
