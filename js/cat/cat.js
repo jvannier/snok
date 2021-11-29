@@ -5,6 +5,8 @@ class Cat extends Element {
             role: "image",
             "aria-label": "cat",
         }, ...gameBoard.spawnPointCoordinates, 1);
+        // Override coordinate based ID so can put glitter on spawn point in the future
+        this.htmlElement.setAttribute("id", "cat");
 
         this.glitterFound = 0;  // Number of glitters found
         this.sprite = new AnimatedSprite(this.htmlElement);  // Cat sprite to be animated
@@ -12,7 +14,7 @@ class Cat extends Element {
 
         // Start sat left
         this.backgroundImage = moves.sitLeft;
-        this.sprite.startAnimation(this.sprite.sitSprites);
+        this.sprite.sit();
         
         // Update coordinates once per 1 ms
         this.eventInterval = this.listenForUserInput();
@@ -32,14 +34,19 @@ class Cat extends Element {
     
     checkCollisions() {
         // Check for collisions with wall
-        let lethalCollision = gameBoard.collisionWithWall(this.x, this.y, this.sprite);
+        let lethalCollision = gameBoard.isCollisionWithWall(this.x, this.y);
+
         // TODO: if there is a collision show the cat falling over?
 
         // TODO: Check for collision with tail
 
         // Stop moving if found lethal collision
-        if (lethalCollision === true && this.eventInterval) {
-            clearInterval(this.eventInterval);
+        if (lethalCollision === true) {
+            if (this.eventInterval) {
+                clearInterval(this.eventInterval);
+            }
+            death.youDied();
+            this.sprite.stopAnimation();  // Stop cat from moving
         }
 
         // Check for glitter element collisions
@@ -50,11 +57,15 @@ class Cat extends Element {
     // If the cat is paused sit it down
     catPause(direction) {
         // Stop movement with pause key
-        if (this.direction !== direction) {
+        if (this.direction === undefined) {
+            // Default to left sit
+            this.backgroundImage = moves.sitLeft;
+            this.sprite.sit();
+        } else if (this.direction !== direction) {
             // Pick which direction to sit based on previous direction
             let oldDirectionChange = moves.directionChanges[this.direction];
             this.backgroundImage = oldDirectionChange.sitBackgroundImage;
-            this.sprite.startAnimation(this.sitSprites);
+            this.sprite.sit();
         }
     }
 
@@ -69,7 +80,7 @@ class Cat extends Element {
 
             // Restart animation if a change occurred
             if (this.direction !== direction) {
-                this.sprite.startAnimation(this.sprite.walkSprites);
+                this.sprite.walk();
             }
             return true;  // A move happened
         }

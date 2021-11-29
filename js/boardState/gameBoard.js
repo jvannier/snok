@@ -1,6 +1,14 @@
+/*
+ * Game Board containing a baord that is a list of lists (a 2D array)
+ * containing the positions of glittler and tail elements.
+ *
+ * - "true" on the board represents a glitter element
+ * - "false" represents a tail element
+ * - "null" represents that no element is there
+ */
 let gameBoard = {
     board: [],
-    // TODO: How do we know how big the board should be?
+    // TODO: How do we know how big the board should be? -- Responsive
     size: 10,
     spriteSize: 64,
     
@@ -14,17 +22,6 @@ let gameBoard = {
         return this.spawnPoint.map(element => element * this.spriteSize);
     },
 
-    // If there is a collision with a wall stop taking user input and animation and show death
-    collisionWithWall(x, y, sprite) {
-        let max = (gameBoard.size - 1) * gameBoard.spriteSize;
-        if (x < 0 || y < 0 || x > max || y > max) {
-            death.youDied();
-            sprite.stopAnimation();
-            return true;
-        }
-        return false;
-    },
-
     // Remove the gameboard from the screen
     removeBoard() {
         let board = document.querySelector("#gameBoard")
@@ -33,9 +30,31 @@ let gameBoard = {
         }
     },
 
+    // Remove the element at the x, y indices on the board
+    removeFromBoard(x, y) {
+        // Get coordinates from indices in this.board
+        let xCoord = x * gameBoard.spriteSize;
+        let yCoord = y * gameBoard.spriteSize;
+
+        // Remove glitter from DOM if it's glitter
+        glitter.removeGlitter(xCoord, yCoord);
+
+        // Remove from board
+        this.board[x][y] = null;
+    },
+
+    // If there is a collision with a wall stop taking user input and animation and show death
+    isCollisionWithWall(x, y) {
+        let max = (gameBoard.size - 1) * gameBoard.spriteSize;
+        if (x < 0 || y < 0 || x >= max || y >= max) {
+            return true;
+        }
+        return false;
+    },
+
     // Check if there is a collision and if there is remove (or not) it from the board
     isCollision(x, y, remove = true) {
-        let collision = this.board[x][y] ? 1 : 0
+        let collision = this.board[x][y] === remove ? 1 : 0
         if (collision === 1 && remove === true) {
             this.removeFromBoard(x, y);
 
@@ -85,17 +104,6 @@ let gameBoard = {
         }
         return collisions;
     },
-    
-    // Remove the glitter element at the x, y indices on the board
-    removeFromBoard(x, y) {
-        // Remove from DOM
-        let xCoord = x * gameBoard.spriteSize;
-        let yCoord = y * gameBoard.spriteSize;
-        glitter.removeGlitter(xCoord, yCoord);
-
-        // Remove from board
-        this.board[x][y] = null;
-    },
 
     makeBoard() {
         // Initialize gameBoard
@@ -115,6 +123,8 @@ let gameBoard = {
         main.style.width = this.size * this.spriteSize + "px";
 
         // Move score to bottom of the screen
-        document.querySelector("#scoreContainer").style.marginTop = this.size * this.spriteSize + "px";
+        document.querySelector("#scoreContainer").style.marginTop = (
+            this.size * this.spriteSize + "px"
+        );
     }
 }

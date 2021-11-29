@@ -27,7 +27,7 @@ let glitter = {
         // TODO: Also make sure it isn't where the cat is
         // Note: Score is also how long the tail is
 
-        // Add to gameBoard
+        // Add to gameBoard ("true" means it's a glitter element)
         gameBoard.board[xRand][yRand] = true;
 
         // Make coordinates and glitter element
@@ -41,12 +41,14 @@ let glitter = {
         element.backgroundImage = "assets/glitter/glitter.png";
 
         this.sprite = new AnimatedSprite(element.htmlElement);
-        this.sprite.startAnimation(this.sprite.glitterSprites, 200);
+        this.sprite.glitter();
     },
 
-    // When removing glitter element also stop the animation interval
+    // Remove glitter HTML element if one exists at given coordinates
     removeGlitter(x, y) {
-        document.querySelector(`#coord_${x}_${y}`).remove();
-        this.sprite.stopAnimation();
+        let glitterElement = document.querySelector(`#coord_${x}_${y}`);
+        if (glitterElement) {
+            glitterElement.remove();
+        }
     },
 }
