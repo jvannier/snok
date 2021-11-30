@@ -10,10 +10,10 @@ npm
 
 which can be installed by installing nodejs
 
-# Running it
+# Running it (starts live-server)
 
-npm install .
-npm start
+- `npm install .`
+- `npm start`
 
 Then you can start or pause the game with the spacebar and change the direction of the snok using the arrow keys.
 
